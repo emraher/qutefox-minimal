@@ -19,7 +19,6 @@
 	/* try increasing if you encounter problems */
 	--urlbar-height-setting: 24px;
 	--tab-min-height: 25px !important;
-	--navbar-timeout: 750ms;
 
 	/* I don't recommend you touch this unless you know what you're doing */
 	--arrowpanel-menuitem-padding: 2px !important;
@@ -30,7 +29,7 @@
 	--toolbar-field-focus-background-color: var(--urlbar-focused-bg-color) !important;
 	--toolbar-field-background-color: var(--urlbar-not-focused-bg-color) !important;
 	--toolbar-field-focus-border-color: transparent !important;
-	--uc-autohide-toolbox-delay: 250ms;
+	--uc-autohide-toolbox-delay: 500ms;
 	--uc-toolbox-rotation: 82deg;
 }
 
