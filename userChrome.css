@@ -271,7 +271,10 @@ tab {
 /* Hide close button on tabs */
 #tabbrowser-tabs .tabbrowser-tab .tab-close-button { display: none !important; }
 
-/* Disable favicons in tab */
+/* Reduce favicons size */
+.tabbrowser-tab .tab-icon-image { transform: scale(0.80) !important; }
+
+/* Hide favicons except for pinned tabs */
 .tab-icon-stack:not([pinned]) { display: none !important; }
 
 .tabbrowser-tab {
