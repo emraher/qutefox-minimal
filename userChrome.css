@@ -9,7 +9,7 @@
 	--tab-active-fg-fallback-color: #c1c1d1;		/* color of text in an active tab without a container */
 	--tab-inactive-fg-fallback-color: #6c6c93;		/* color of text in an inactive tab without a container */
 	--toolbar-bgcolor: #262639 !important;
-	--tab-font: 'monospace';
+	--tab-font: 'Cozette';
 	--urlbar-font: 'monospace';
 
 	/* private mode icon and colour */
