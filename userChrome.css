@@ -18,7 +18,7 @@
 
 	/* try increasing if you encounter problems */
 	--urlbar-height-setting: 24px;
-	--tab-min-height: 25px !important;
+	--tab-min-height: 15px !important;
 
 	/* I don't recommend you touch this unless you know what you're doing */
 	--arrowpanel-menuitem-padding: 2px !important;
@@ -33,66 +33,143 @@
 	--uc-toolbox-rotation: 82deg;
 }
 
-/* BEGIN autohide_main_toolbar.css:
-/* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/autohide_main_toolbar.css made available under Mozilla Public License v. 2.0
+/* Source file https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/autohide_bookmarks_and_main_toolbars.css made available under Mozilla Public License v. 2.0
 See the above repository for updates as well as full license text. */
 
-/* This style hides the main toolbar and shows it when the cursor is over the
-* tabs toolbar as well as whenever the focus is inside nav-bar, such as when
-* urlbar is focused. */
-
-:root{ --uc-navbar-transform: -30px }
-:root[uidensity="compact"]{ --uc-navbar-transform: -24px }
-
-#navigator-toolbox > div{ display: contents; }
-:root[sessionrestored] :where(#nav-bar,#PersonalToolbar,#tab-notification-deck,.global-notificationbox){
-  transform: translateY(var(--uc-navbar-transform))
-}
-:root:is([customizing],[chromehidden*="toolbar"]) :where(#nav-bar,#PersonalToolbar,#tab-notification-deck,.global-notificationbox){
-  transform: none !important;
-  opacity: 1 !important;
+#navigator-toolbox{
+  --uc-bm-padding: 4px; /* Vertical padding to be applied to bookmarks */
+  --uc-bm-height: calc(20px + 2 * var(--uc-bm-padding)); /* Might need to adjust if the toolbar has other buttons */
+  --uc-navbar-height: -40px; /* navbar is main toolbar. Use negative value */
+  --uc-autohide-toolbar-delay: 600ms; /* The toolbar is hidden after 0.6s */
 }
 
-#nav-bar:not([customizing]){
-  opacity: 0;
-  transition:  transform 400ms ease 500ms, opacity 400ms ease 500ms !important;
-  position: relative;
+:root[uidensity="compact"] #navigator-toolbox{
+  --uc-navbar-height: -24px;
+}
+:root[uidensity="touch"] #navigator-toolbox{ --uc-bm-padding: 6px }
+
+:root[chromehidden~="directories"] #navigator-toolbox{
+  --uc-bm-height: 0px;
+}
+:root[chromehidden~="toolbar"] #navigator-toolbox{
+  --uc-navbar-height: 0px;
+}
+#navigator-toolbox,
+#sidebar-box,
+#sidebar-main,
+#sidebar-splitter,
+#tabbrowser-tabbox{
+  z-index: auto !important;
+}
+
+:root[sessionrestored] #nav-bar,
+:root[sessionrestored] #PersonalToolbar{
+  background-image: linear-gradient(var(--toolbar-bgcolor),var(--toolbar-bgcolor)), var(--lwt-additional-images,var(--toolbar-bgimage))  !important;
+  background-position: top,var(--lwt-background-alignment);
+  background-position-y: calc(0px - var(--tab-min-height) - 2*var(--tab-block-margin,0px));
+  background-repeat: repeat,var(--lwt-background-tiling);
+  transform: rotateX(90deg);
+  transform-origin: top;
+  transition: transform 135ms linear var(--uc-autohide-toolbar-delay) !important;
   z-index: 2;
 }
-#titlebar{ position: relative; z-index: 3 }
-
-/* Show when toolbox is focused, like when urlbar has received focus */
-#navigator-toolbox:focus-within > .browser-toolbar{
-  transform: translateY(0);
-  opacity: 1;
-  transition-duration: 500ms, 200ms !important;
-  transition-delay: 0s !important;
+#PlacesToolbarItems > .bookmark-item,
+#OtherBookmarks,
+#PersonalToolbar > #import-button{
+  padding-block: var(--uc-bm-padding) !important;
 }
-/* Show when toolbox is hovered */
-#titlebar:hover ~ .browser-toolbar,
-#nav-bar:hover,
-#nav-bar:hover + #PersonalToolbar{
-  transform: translateY(0);
-  opacity: 1;
-  transition-duration: 500ms, 200ms !important;
-  transition-delay: 0s !important;
+:root[sessionrestored] #PersonalToolbar{
+  z-index: 1;
+  background-position-y: calc(0px - var(--tab-min-height) - 2*var(--tab-block-margin,0px) + var( --uc-navbar-height));
 }
-/* This ruleset is separate, because not having :has support breaks other selectors as well */
-#mainPopupSet:has(> #appMenu-popup:hover) ~ #navigator-toolbox > .browser-toolbar{
-  transition-delay: 33ms !important;
-  transform: translateY(0);
+
+:root[lwtheme-image] #nav-bar,
+:root[lwtheme-image] #PersonalToolbar{
+  background-image: linear-gradient(var(--toolbar-bgcolor),var(--toolbar-bgcolor)),var(--lwt-header-image), var(--lwt-additional-images,var(--toolbar-bgimage)) !important;
+}
+
+#nav-bar[customizing],#PersonalToolbar[customizing]{ transform: none !important }
+
+#navigator-toolbox > #PersonalToolbar{
+  transform-origin: 0px var(--uc-navbar-height);
+  position: relative;
+}
+:root[sessionrestored] #urlbar[popover]{
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 135ms linear var(--uc-autohide-toolbar-delay), opacity 0ms calc(var(--uc-autohide-toolbar-delay) + 135ms);
+  transform-origin: 0px calc((var(--urlbar-container-height) - var(--urlbar-height)) / 2);
+  transform: rotateX(89.5deg);
+}
+#mainPopupSet:has(> [role="group"][panelopen]) ~ toolbox #urlbar[popover],
+#navigator-toolbox:is(:hover,:focus-within) #urlbar[popover],
+#urlbar-container > #urlbar[popover]:is([focused],[open]){
   opacity: 1;
-} 
+  pointer-events: auto;
+  transition-delay: 100ms;
+  transform: rotateX(0deg);
+}
 
-/* Bookmarks toolbar needs so extra rules */
-#PersonalToolbar{ transition: transform 400ms ease 500ms !important; position: relative; z-index: 1 }
+:root[sessionrestored]:not([customizing]) #navigator-toolbox{
+  margin-bottom:  calc(-1px - var(--uc-bm-height) + var(--uc-navbar-height));
+}
 
-/* Move up the content view */
-:root[sessionrestored]:not([inFullscreen],[chromehidden~="toolbar"]) > body > #browser{ margin-top: var(--uc-navbar-transform); }
+/* Make sure the bookmarks toolbar is never collapsed even if it is disabled */
+:root[sizemode="fullscreen"] #PersonalToolbar,
+#PersonalToolbar[collapsed="true"]{
+  min-height: initial !important;
+  max-height: initial !important;
+  visibility: hidden !important
+}
+#PersonalToolbar[collapsed="true"] #PlacesToolbarItems > *,
+:root[sizemode="fullscreen"] #PersonalToolbar #PlacesToolbarItems > *{
+  visibility: hidden !important;
+}
 
-/* END autohide_main_toolbar.css:
- * https://github.com/MrOtherGuy/firefox-csshacks/tree/master/chrome/autohide_main_toolbar.css 
- * made available under Mozilla Public License v. 2.0 */
+/* If bookmarks toolbar is collapsed on startup, then no items are generated, and we need to set some height for it */
+#PlacesToolbarItems:empty{
+  height: var(--uc-bm-height);
+}
+
+/* Selected tab needs higher z-index now to "hide" the broder below it */
+.tabbrowser-tab[selected]{ z-index: 3 !important; }
+
+/* Show when cursor is over main menu popup - this requires :has selector support */
+#mainPopupSet:has(> [role="group"][panelopen]) ~ toolbox > .browser-toolbar{
+  transition-delay: 100ms !important;
+  transform: rotateX(0);
+}
+
+/* SELECT TOOLBAR BEHAVIOR */
+/* Comment out or delete one of these to disable that behavior */
+
+/* Show when urlbar is focused */
+#nav-bar:focus-within + #PersonalToolbar,
+#navigator-toolbox > #nav-bar:focus-within{
+  transition-delay: 100ms !important;
+  transform: rotateX(0);
+}
+
+/* Show when cursor is over the toolbar area */
+#navigator-toolbox:hover > .browser-toolbar{
+  transition-delay: 100ms !important;
+  transform: rotateX(0);
+}
+
+/* This makes the tab notification box show immediately below tabs, otherwise it would break the layout */
+#navigator-toolbox > div{ display: contents }
+:where(#titlebar,#navigator-toolbox > #TabsToolbar,#navigator-toolbox > #toolbar-menubar,#tab-notification-deck,.global-notificationbox){
+  order: -1;
+}
+:root[BookmarksToolbarOverlapsBrowser] #navigator-toolbox{
+  margin-bottom: calc(-1px - var(--uc-bm-height) + var(--uc-navbar-height)) !important;
+  z-index: auto !important;
+}
+@media (-moz-bool-pref: "browser.fullscreen.autohide"){
+  :root[sizemode="fullscreen"] #navigator-toolbox[style*="margin-top"]{
+    margin-top: calc(1px - var(--tab-min-height) - 2 * var(--tab-block-margin)) !important;
+  }
+}
 
 /*****************************************************************************/
 /* GENERAL UI TWEAKS                                                         */
@@ -252,7 +329,7 @@ toolbarbutton  12px !important;
 }
 
 #TabsToolbar, .tabbrowser-tab {
-	max-height: var(--tab-min-height) !important;
+	min-height: var(--tab-min-height) !important;
 	font-size: 11px !important;
 }
 
