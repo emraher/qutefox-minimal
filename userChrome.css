@@ -9,8 +9,8 @@
 	--tab-active-fg-fallback-color: #c1c1d1;		/* color of text in an active tab without a container */
 	--tab-inactive-fg-fallback-color: #6c6c93;		/* color of text in an inactive tab without a container */
 	--toolbar-bgcolor: #111117 !important;
-	--tab-font: 'Cozette';
-	--urlbar-font: 'monospace';
+	--tab-font: 'Fira Code';
+	--urlbar-font: 'Fira Code';
 
 	/* private mode icon and colour */
 	--tab-private-icon: "P"; /* icon to be displayed to the left of the tab titles in private windows */
@@ -194,6 +194,8 @@ menu, menuitem, menucaption { border-radius: 0px !important; }
 	padding-top: 0 !important;
 	inset-inline: auto !important;
 	min-width: unset !important;
+    font-family: var(--urlbar-font, 'monospace');
+    font-size: 10px;
 }
 
 /*****************************************************************************/
