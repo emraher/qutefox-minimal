@@ -429,3 +429,10 @@ tab {
 #private-browsing-indicator-with-label > label { 
 	display: none;
 }
+
+
+
+/*hide speaker icon*/
+.tab-icon-overlay[soundplaying][pinned] {
+    display: none !important;
+}
